@@ -2,14 +2,23 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth-goole/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PaymentModule } from './payment/payment.module';
+import { UserService } from './user/user.service';
+import { UserController } from './user/user.controller';
 
+console.log("🔍 MONGO_URI:", process.env.MONGODB);
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/korean_api'), 
+    ConfigModule.forRoot({
+      isGlobal: true, // Biến môi trường dùng toàn cục
+    }),
+    MongooseModule.forRoot(process.env.MONGODB),
     UserModule,
-    AuthModule
+    AuthModule,
+    PaymentModule
   ],
   controllers: [AppController],
   providers: [AppService],

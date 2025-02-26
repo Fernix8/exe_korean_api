@@ -3,10 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './entities/user.entity';
+import { Payment, PaymentDocument } from '../payment/entities/payment.entity';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Payment.name) private paymentModel: Model<PaymentDocument>,) { }
 
   async create(userData: Partial<User>): Promise<User> {
     const user = new this.userModel(userData);
@@ -31,5 +34,24 @@ export class UserService {
 
   async delete(id: string): Promise<User | null> {
     return this.userModel.findByIdAndDelete(id).exec();
+  }
+
+  async upgradeToPremium(email: string, orderCode: number): Promise<void> {
+    const payment = await this.paymentModel.findOneAndUpdate(
+      { orderCode },
+      { status: 'completed' },
+      { new: true },
+    );
+
+    if (!payment) {
+      throw new Error('Payment not found for the given orderCode');
+    }
+
+    // Upgrade user to premium
+    await this.userModel.updateOne(
+      { email },
+      { isPremium: true },
+      { upsert: true }, // Create user if not exists
+    );
   }
 }

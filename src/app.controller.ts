@@ -14,8 +14,41 @@ import { AuthService } from './auth/auth-goole/auth.service';
 export class AppController {
   constructor(private readonly appService: AppService, private authService: AuthService) {}
 public jwtToken = {access_token: ''}; 
-@UseGuards(AuthGuard('local'))
+
+// @UseGuards(AuthGuard('local'))
 @Post('auth/login')
+@ApiOperation({ summary: 'User login' })
+@ApiBody({
+  schema: {
+    type: 'object',
+    properties: {
+      username: {
+        type: 'string',
+        example: 'user@example.com',
+        description: 'User email or username'
+      },
+      password: {
+        type: 'string',
+        example: 'password123',
+        description: 'User password'
+      }
+    },
+    required: ['username', 'password']
+  }
+})
+@ApiResponse({
+  status: 200,
+  description: 'Login successful',
+  schema: {
+    type: 'object',
+    properties: {
+      access_token: {
+        type: 'string',
+        description: 'JWT access token'
+      }
+    }
+  }
+})
 async login (@Req() req) {
   console.log('🔥 Login route hit!'); 
     return this.authService.login(req.user);
