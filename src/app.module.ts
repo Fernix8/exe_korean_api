@@ -20,7 +20,7 @@ console.log("🔍 MONGO_URI:", process.env.MONGODB);
     AuthModule,
     PaymentModule
   ],
-  controllers: [AppController, UserController],
-  providers: [AppService, UserService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
