@@ -17,6 +17,9 @@ export class User {
   @ApiProperty({ example: 'securepassword', description: 'The password of the user' })
   @Prop({ required: true })
   password: string;
+
+  @Prop({ default: false })
+  isPremium: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
