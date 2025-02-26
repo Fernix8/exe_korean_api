@@ -7,6 +7,13 @@ async function bootstrap() {
   const port = 8000;
 
   // Enable Swagger
+  app.enableCors({
+    origin: '*', // Allow all origins (change this for security)
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+    credentials: true, // Allow cookies & authorization headers
+  });
+  
   const config = new DocumentBuilder()
     .setTitle('NestJS User API')
     .setDescription('API documentation for User CRUD operations')
