@@ -6,6 +6,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth-goole/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PaymentModule } from './payment/payment.module';
+import { UserService } from './user/user.service';
+import { UserController } from './user/user.controller';
 
 console.log("🔍 MONGO_URI:", process.env.MONGODB);
 @Module({
