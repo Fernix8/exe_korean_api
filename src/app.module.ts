@@ -5,10 +5,14 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth-goole/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BlogModule } from './blog/blog.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/korean_api'),
+    ConfigModule.forRoot({
+      isGlobal: true, // Biến môi trường dùng toàn cục
+    }),
+    MongooseModule.forRoot(process.env.MONGODB),
     UserModule,
     AuthModule,
     BlogModule,
