@@ -6,6 +6,7 @@ import { Request, Response } from 'express';
 import { type } from 'os';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth-goole/auth.service';
+
 // import { AuthService } from './auth/auth.service';
 
 // @ApiTags('Test')
@@ -49,165 +50,56 @@ public jwtToken = {access_token: ''};
   }
 })
 async login (@Req() req) {
+  console.log('🔥 Login route hit!'); 
     return this.authService.login(req.user);
 }
 
 
+
+@Get('auth/google')
 @UseGuards(AuthGuard('google'))
-@Get('google')
-async google() {}
+async googleAuth() {
+  return { message: 'Redirecting to Google login...' };
+}
 
 
-@UseGuards(AuthGuard('google'))
 @Get('auth/google/callback')
-async googleCallback(@Req() req, @Res() res: Response) {
-  // return req.user;
-  // return this.authService.login(req.user);
-  // console.log(req.user);
-  const jwt = await this.authService.login(req.user);
-  this.jwtToken = jwt;
-  res.set('authorization', jwt.access_token);
-  res.status(200);
-  return res.json(req.user);
-  // res.redirect('/profile', )
-}
-
-
-
 @UseGuards(AuthGuard('google'))
-@Get('home')
-async getHome(@Req() req, @Res() res: Response) {
-  // console.log('token--->>',this.jwtToken.access_token)
-  if(this.jwtToken.access_token) {
-    res.json({data: {}})
-  } else {
-    res.json({})
-  }
+async googleAuthRedirect(@Req() req: any, @Res() res: Response) {
+    console.log('🔥 Google callback route hit!');
+
+    if (!req.user) {
+        console.log('❌ No user from Google');
+        return res.status(401).json({ message: 'Unauthorized - No user data' });
+    }
+
+    console.log('✅ User from Google:', req.user);
+
+    try {
+        const jwt = await this.authService.login(req.user);
+        console.log('🔑 Generated JWT:', jwt);
+
+        // **Chuyển hướng về frontend với token trên URL**
+        return res.redirect(`http://localhost:3000/login?access_token=${jwt.access_token}`);
+    } catch (error) {
+        console.error('🔥 Error in Google login:', error);
+        return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
 }
 
-// need more research
+
+
+
+
+
 @Get('logout')
 async logout(@Req() req, @Res() res) {
   const jwt = await this.authService.login('');
   this.jwtToken = jwt;
   return 'successfully logout'
 }
-
-
-@UseGuards(AuthGuard('google'))
-@Get('google')
-async Google(@Req() req) {}
-
-@Get('auth/google/callback')
-@UseGuards(AuthGuard('google'))
-async callback(@Req() req, @Res() res) {
-  console.log('done')
-  res.json(req.user);
-}
-
-
   @Get('/')
-  // @ApiOperation({summary: 'default get app'})
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Success',
-  //   schema: {
-  //     type: 'object',
-  //     properties: {
-  //       data: {
-  //         type: 'string',
-  //         example: 'logged in ...',
-  //         description: 'login success'
-  //       }
-  //     }
-  //   }
-  // })
   getHello(): string {
     return this.appService.getHello();
   }
-
-//   @Post('/save')
-//   @ApiOperation({
-//     summary: 'create product'
-//   })
-//   @ApiParam({
-//         name: 'id',
-//         required: true,
-//         description: 'enter your id',
-//         type: 'integer'
-//   })
-//   @ApiParam({
-//     name: 'name',
-//     required: true,
-//     description: 'enter your name',
-//     type: 'string'
-// })
-// @ApiResponse({status: 403, description: 'Forbidden'})
-// @ApiResponse({
-//   status: 201,
-//   description: 'success',
-//   schema: {
-//     type: 'object',
-//     properties: {
-//       data: {
-//         type: 'string',
-//         example: 'saved',
-//         description: 'success message'
-
-//       }
-//     }
-//   }
-// })
-//   save(@Req() request: Request, @Res() response: Response) {
-//     response.send('saved');
-//   }
-
-//   @Delete('/delete')
-//   @ApiOperation({summary: 'Delete product'})
-//   @ApiParam({
-//     name: 'id',
-//     required: true,
-//     description: '',
-//     type: 'integer'
-//   })
-//   @ApiQuery({
-//     name: 'name',
-//     required: true,
-//     description: 'test',
-//     type: 'string'
-//   })
-//   delete(): string {
-//     return 'deleted....'
-//   }
-
-//   @Put('/update/:id')
-//   @ApiOperation({summary: 'Update the record'})
-//   @ApiQuery({
-//     name: 'id',
-//     required: true,
-//     description: 'id',
-//     type: 'integer'
-//   })
-  
-//   @ApiBody({
-//     schema: {
-//       type: 'object',
-//       properties: {
-//         id: {
-//           type: 'integer',
-//           description: 'id',
-//           example: 10,
-//           required: ['true']
-//         },
-//         name: {
-//           type: 'string',
-//           description: 'test',
-//           example: 'test'
-//         }
-//       }
-//     }
-//   })
-//   update(): string {
-//     return 'updated...'
-//   }
 }
