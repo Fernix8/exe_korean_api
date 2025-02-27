@@ -12,8 +12,7 @@ import { Payment, PaymentSchema } from '../payment/entities/payment.entity';
       { name: Payment.name, schema: PaymentSchema },
     ]),
   ],
-  providers: [UserService],
+  providers: [UserService, ],
   controllers: [UserController],
-  exports: [UserService],
 })
 export class UserModule {}

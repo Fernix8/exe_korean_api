@@ -23,11 +23,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-app.enableCors({
-    origin: 'http://localhost:3000', // Cho phép frontend truy cập
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Các phương thức HTTP được phép
-    credentials: true, // Cho phép gửi cookie/token qua request
-  });
+
   await app.listen(port);
 
   // Print Swagger URL in console
