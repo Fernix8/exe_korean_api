@@ -7,7 +7,7 @@ async function bootstrap() {
   const port = 8000;
 
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: 'https://korean-elearning.vercel.app',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
     credentials: true,
