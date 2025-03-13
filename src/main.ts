@@ -6,14 +6,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = 8000;
 
-  // Enable Swagger
   app.enableCors({
-    origin: '*', // Allow all origins (change this for security)
+    origin: 'https://korean-elearning.vercel.app',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
-    credentials: true, // Allow cookies & authorization headers
+    credentials: true,
   });
-  
+
+  // Enable Swagger
   const config = new DocumentBuilder()
     .setTitle('NestJS User API')
     .setDescription('API documentation for User CRUD operations')
