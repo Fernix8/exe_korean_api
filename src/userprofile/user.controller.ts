@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Body, Param } from '@nestjs/common';
+import { Controller, Get, Put, Body, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '../schemas/user.schema';
 
@@ -6,13 +6,21 @@ import { User } from '../schemas/user.schema';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  async getUser(): Promise<User> {
-    return this.userService.getUser();
+  @Get('profile')
+  async getUser(@Req() req): Promise<User> {
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new Error('Unauthorized');
+    }
+    return this.userService.getUserById(userId);
   }
 
-  @Put(':id')
-  async updateUser(@Param('id') id: string, @Body() updateData: Partial<User>): Promise<User> {
-    return this.userService.updateUser(id, updateData);
+  @Put('profile')
+  async updateUser(@Req() req, @Body() updateData: Partial<User>): Promise<User> {
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new Error('Unauthorized');
+    }
+    return this.userService.updateUser(userId, updateData);
   }
 }
