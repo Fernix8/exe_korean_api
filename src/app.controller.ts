@@ -14,7 +14,7 @@ export class AppController {
   constructor(private readonly appService: AppService, private authService: AuthService) {}
 public jwtToken = {access_token: ''}; 
 
-// @UseGuards(AuthGuard('local'))
+@UseGuards(AuthGuard('local'))
 @Post('auth/login')
 @ApiOperation({ summary: 'User login' })
 @ApiBody({
