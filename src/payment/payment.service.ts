@@ -13,7 +13,7 @@ dotenv.config();
 @Injectable()
 export class PaymentService {
   private readonly payOS: PayOS;
-  private readonly YOUR_DOMAIN = 'http://localhost:3000';
+  private readonly YOUR_DOMAIN = 'https://korean-elearning.vercel.app';
 
   constructor(
     @InjectModel(Payment.name) private paymentModel: Model<PaymentDocument>,
