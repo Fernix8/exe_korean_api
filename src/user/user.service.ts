@@ -9,7 +9,16 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Payment.name) private paymentModel: Model<PaymentDocument>,) { }
-
+  
+  async authenticateUser(email: string, password: string): Promise<User> {
+    const user = await this.userModel
+      .findOne({
+        email,
+        password
+      })
+      .exec()
+    return user
+  }
   async create(userData: Partial<User>): Promise<User> {
     const user = new this.userModel(userData);
     return user.save();
